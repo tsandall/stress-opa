@@ -63,7 +63,7 @@ func run(i int, ch chan<- result) {
 				panic(err)
 			}
 			t0 := time.Now()
-			resp, err := client.Post("http://localhost:8181/v1/data/torin/bundletest/allow?metrics=true", "application/json", &buf)
+			resp, err := client.Post("http://localhost:8181/v1/data/example/allow?metrics=true", "application/json", &buf)
 			if err != nil {
 				panic(err)
 			}
