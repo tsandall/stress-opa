@@ -109,10 +109,12 @@ func main() {
 		"cli(90%)",
 		"cli(99%)",
 		"cli(99.9%)",
+		"cli(99.99%)",
 		"opa(mean)",
 		"opa(90%)",
 		"opa(99%)",
 		"opa(99.9%)",
+		"opa(99.99%)",
 	}
 
 	printHeader(metricKeys)
@@ -139,7 +141,7 @@ func main() {
 
 				for _, h := range hists {
 					hist := m.Histogram(h).Value().(map[string]interface{})
-					keys := []string{"mean", "90%", "99%", "99.9%"}
+					keys := []string{"mean", "90%", "99%", "99.9%", "99.99%"}
 					for i := range keys {
 						row[fmt.Sprintf("%v(%v)", h, keys[i])] = time.Duration(hist[keys[i]].(float64))
 					}
@@ -153,12 +155,7 @@ func main() {
 
 			case r := <-monitor:
 				m.Histogram("cli").Update(r.Total)
-				ns := int64(0)
-				for k, v := range r.Metrics {
-					m.Histogram(k).Update(v)
-					ns += v
-				}
-				m.Histogram("opa").Update(ns)
+				m.Histogram("opa").Update(r.Metrics["timer_server_handler_ns"])
 				n++
 			}
 		}
